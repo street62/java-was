@@ -2,7 +2,11 @@ package was.webserver;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import was.http.HttpRequest;
@@ -17,7 +21,7 @@ import was.util.IOUtils;
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
-    private final Map<String, MyController> handlerMapper = new HashMap<>();
+    private final Map<HttpRequest, MyController> handlerMapper = new HashMap<>();
 
     private Socket connection;
 
@@ -27,7 +31,7 @@ public class RequestHandler extends Thread {
     }
 
     private void initHandlerMapper() {
-        handlerMapper.put("/user/create", new SaveUserController());
+        handlerMapper.put(new HttpRequest("/user/create", "POST"), new SaveUserController());
     }
 
     public void run() {
@@ -39,16 +43,21 @@ public class RequestHandler extends Thread {
             DataOutputStream outputStream = new DataOutputStream(out);
             HttpRequest httpRequest = new HttpRequest(bufferedReader);
 
-            String path = httpRequest.getPath();
+            IOUtils.printRequestHeader(httpRequest);
 
-            if (handlerMapper.containsKey(path)) {
-                MyController myController = handlerMapper.get(path);
+            String path = httpRequest.getPath();
+            String method = httpRequest.getMethod();
+
+            HttpRequest request = new HttpRequest(path, method);
+
+            if (handlerMapper.containsKey(request)) {
+                MyController myController = handlerMapper.get(request);
 
                 Map<String, String> paramMap = httpRequest.getParamMap();
                 path = myController.process(paramMap);
             }
 
-            IOUtils.printRequestHeader(httpRequest.getHeaderMessages());
+            IOUtils.printRequestHeader(httpRequest);
 
             HttpResponse httpResponse = new HttpResponse(path, outputStream);
             outputStream.writeBytes(httpResponse.getResponseHeader());
