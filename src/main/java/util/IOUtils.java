@@ -1,5 +1,6 @@
 package util;
 
+import http.HttpRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,10 +27,12 @@ public class IOUtils {
         return String.copyValueOf(body);
     }
 
-    public static void printRequestHeader(List<String> headerMessages) throws IOException {
-        log.info("Request line: {}", headerMessages.get(0));
-        for (int i = 1; i < headerMessages.size(); i++) {
-            log.info("header: {}", headerMessages.get(i));
+    public static void printRequestHeader(HttpRequest request) throws IOException {
+        log.info("Request method: {}, path: {}", request.getMethod(), request.getPath());
+
+        List<HttpRequestUtils.Pair> pairs = request.getPairs();
+        for (HttpRequestUtils.Pair pair : pairs) {
+            log.info("header: {}", pair);
         }
     }
 
