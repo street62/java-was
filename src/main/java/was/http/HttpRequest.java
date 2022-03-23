@@ -30,22 +30,23 @@ public class HttpRequest {
         this.method = HttpRequestUtils.parseMethod(firstLine);
 
         String line = bf.readLine();
-        while (!(line == null) || line.equals("")) {
+        while (!(line == null || line.equals(""))) {
             HttpRequestUtils.Pair pair = HttpRequestUtils.parseHeader(line);
             pairs.add(pair);
             line = bf.readLine();
         }
+        if (method.equals("POST")) {
+            String stringContentLength = pairs.stream()
+                    .filter(pair -> pair.getKey().equals("Content-Length"))
+                    .findFirst()
+                    .orElse(null)
+                    .getValue();
 
-        String stringContentLength = pairs.stream()
-                .filter(pair -> pair.getKey().equals("Content-Length"))
-                .findFirst()
-                .orElse(null)
-                .getValue();
 
-        int contentLength = Integer.parseInt(stringContentLength);
-        bodyMessages = IOUtils.readData(bf, contentLength);
-
-        this.paramMap = HttpRequestUtils.parseValues(bodyMessages, "&");
+            int contentLength = Integer.parseInt(stringContentLength);
+            bodyMessages = IOUtils.readData(bf, contentLength);
+            this.paramMap = HttpRequestUtils.parseValues(bodyMessages, "&");
+        }
     }
 
     public List<HttpRequestUtils.Pair> getPairs() {

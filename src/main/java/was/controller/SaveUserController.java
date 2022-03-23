@@ -16,6 +16,7 @@ public class SaveUserController implements MyController {
         User user = new User(userId, password, name, email);
 
         DataBase.addUser(user);
+        DataBase.findAll().stream().forEach(System.out::println);
         return "index.html";
     }
 }
