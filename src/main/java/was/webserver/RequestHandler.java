@@ -39,7 +39,6 @@ public class RequestHandler extends Thread {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            DataOutputStream outputStream = new DataOutputStream(out);
             HttpRequest request = new HttpRequest(in);
 
             IOUtils.printRequestHeader(request);
@@ -54,10 +53,8 @@ public class RequestHandler extends Thread {
 
             IOUtils.printRequestHeader(request);
 
-            HttpResponse httpResponse = new HttpResponse(path, outputStream);
-            outputStream.writeBytes(httpResponse.getResponseHeader());
-            outputStream.write(httpResponse.getResponseBody());
-            outputStream.flush();
+            HttpResponse httpResponse = new HttpResponse(path, out);
+            httpResponse.writeResponseMessage();
         } catch (IOException e) {
             log.error(e.getMessage());
         }

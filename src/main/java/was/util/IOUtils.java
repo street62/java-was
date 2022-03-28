@@ -30,11 +30,11 @@ public class IOUtils {
     }
 
     public static void printRequestHeader(HttpRequest request) throws IOException {
-        log.info("Request method: {}, path: {}", request.getMethod(), request.getPath());
+        log.debug("Request method: {}, path: {}", request.getMethod(), request.getPath());
 
         List<HttpRequestUtils.Pair> pairs = request.getPairs();
         for (HttpRequestUtils.Pair pair : pairs) {
-            log.info("header: {}", pair);
+            log.debug("header: {}", pair);
         }
     }
 
