@@ -1,10 +1,13 @@
 package was.controller;
 
+import java.io.IOException;
 import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import was.db.DataBase;
+import was.http.HttpRequest;
+import was.http.HttpResponse;
 import was.model.User;
 
 public class SaveUserController implements MyController {
@@ -12,7 +15,9 @@ public class SaveUserController implements MyController {
     private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
-    public String process(Map<String, String> paramMap) {
+    public HttpResponse process(HttpRequest request) throws IOException {
+        Map<String, String> paramMap = request.getParamMap();
+
         String userId = paramMap.get("userId");
         String password = paramMap.get("password");
         String name = paramMap.get("name");
@@ -22,6 +27,7 @@ public class SaveUserController implements MyController {
         DataBase.addUser(user);
 
         log.debug("users: {}", DataBase.findAll());
-        return "index.html";
+        return new HttpResponse("index.html", 302);
     }
+
 }

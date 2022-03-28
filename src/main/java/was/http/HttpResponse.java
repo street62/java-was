@@ -16,10 +16,8 @@ public class HttpResponse {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private String responseHeader;
     private byte[] responseBody;
-    private DataOutputStream outputStream;
 
-    public HttpResponse(String path, OutputStream out, int statusCode) throws IOException {
-        outputStream = new DataOutputStream(out);
+    public HttpResponse(String path, int statusCode) throws IOException {
         if (statusCode == 200) {
            create200ResponseMessage(path);
         } else if (statusCode == 302) {
@@ -52,7 +50,9 @@ public class HttpResponse {
     }
 
 
-    public void writeResponseMessage() throws IOException {
+    public void writeResponseMessage(OutputStream out) throws IOException {
+        DataOutputStream outputStream = new DataOutputStream(out);
+
         outputStream.writeBytes(responseHeader);
         if (!Objects.isNull(responseBody))
             outputStream.write(responseBody);

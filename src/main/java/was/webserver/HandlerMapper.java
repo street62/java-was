@@ -2,6 +2,7 @@ package was.webserver;
 
 import was.controller.MyController;
 import was.controller.SaveUserController;
+import was.controller.WebappController;
 import was.http.HttpRequest;
 
 import java.util.HashMap;
@@ -15,6 +16,10 @@ public class HandlerMapper {
     }
 
     public MyController getHandler(HttpRequest request) {
-        return handlerMapper.get(request);
+        MyController myController = handlerMapper.get(request);
+        if (myController == null) {
+            return new WebappController();
+        }
+        return myController;
     }
 }

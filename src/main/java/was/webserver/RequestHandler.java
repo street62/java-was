@@ -22,17 +22,12 @@ import was.util.IOUtils;
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
-    private HandlerMapper handlerMapper;
+    private HandlerMapper handlerMapper = new HandlerMapper();
 
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {
         this.connection = connectionSocket;
-        initHandlerMapper();
-    }
-
-    private void initHandlerMapper() {
-        handlerMapper = new HandlerMapper();
     }
 
     public void run() {
@@ -44,17 +39,10 @@ public class RequestHandler extends Thread {
 
             IOUtils.printRequestHeader(request);
 
-            int statusCode = 200;
-            String path = request.getPath();
             MyController myController = handlerMapper.getHandler(request);
-            if (!Objects.isNull(myController)) {
-                statusCode = 302;
-                Map<String, String> paramMap = request.getParamMap();
-                path = myController.process(paramMap);
-            }
+            HttpResponse httpResponse = myController.process(request);
 
-            HttpResponse httpResponse = new HttpResponse(path, out, statusCode);
-            httpResponse.writeResponseMessage();
+            httpResponse.writeResponseMessage(out);
         } catch (IOException e) {
             log.error(e.getMessage());
         }

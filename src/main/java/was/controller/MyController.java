@@ -1,8 +1,12 @@
 package was.controller;
 
+import was.http.HttpRequest;
+import was.http.HttpResponse;
+
+import java.io.IOException;
 import java.util.Map;
 
 public interface MyController {
 
-    String process(Map<String, String> paramMap);
+    HttpResponse process(HttpRequest request) throws IOException;
 }
