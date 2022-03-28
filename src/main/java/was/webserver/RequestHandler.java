@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import was.http.HttpRequest;
 import was.http.HttpResponse;
@@ -21,7 +22,7 @@ import was.util.IOUtils;
 public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
-    private final Map<HttpRequest, MyController> handlerMapper = new HashMap<>();
+    private HandlerMapper handlerMapper;
 
     private Socket connection;
 
@@ -31,7 +32,7 @@ public class RequestHandler extends Thread {
     }
 
     private void initHandlerMapper() {
-        handlerMapper.put(new HttpRequest("/user/create", "POST"), new SaveUserController());
+        handlerMapper = new HandlerMapper();
     }
 
     public void run() {
@@ -45,8 +46,8 @@ public class RequestHandler extends Thread {
 
             int statusCode = 200;
             String path = request.getPath();
-            if (handlerMapper.containsKey(request)) {
-                MyController myController = handlerMapper.get(request);
+            MyController myController = handlerMapper.getHandler(request);
+            if (!Objects.isNull(myController)) {
                 statusCode = 302;
                 Map<String, String> paramMap = request.getParamMap();
                 path = myController.process(paramMap);
