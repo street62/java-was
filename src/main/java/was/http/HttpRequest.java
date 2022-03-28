@@ -4,37 +4,38 @@ import was.util.HttpRequestUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.net.URLDecoder;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import was.util.IOUtils;
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
 public class HttpRequest {
 
-    private List<HttpRequestUtils.Pair> pairs = new ArrayList<>();
-    private String bodyMessages;
+    private List<HttpRequestUtils.Pair> pairs;
     private String path;
     private String method;
     private Map<String, String> paramMap;
+    private BufferedReader bufferedReader;
 
     public HttpRequest(String path, String method) {
         this.path = path;
         this.method = method;
     }
 
-    public HttpRequest(BufferedReader bf) throws IOException {
-        String firstLine = bf.readLine();
+    public HttpRequest(InputStream in) throws IOException {
+        this.bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
+        String firstLine = bufferedReader.readLine();
         this.path = HttpRequestUtils.parsePath(firstLine);
         this.method = HttpRequestUtils.parseMethod(firstLine);
+        this.pairs = HttpRequestUtils.parseHeader(bufferedReader);
+        readParameters();
+    }
 
-        String line = bf.readLine();
-        while (!(line == null || line.equals(""))) {
-            HttpRequestUtils.Pair pair = HttpRequestUtils.parseHeader(line);
-            pairs.add(pair);
-            line = bf.readLine();
-        }
+    private void readParameters() throws IOException {
         if (method.equals("POST")) {
             String stringContentLength = pairs.stream()
                     .filter(pair -> pair.getKey().equals("Content-Length"))
@@ -42,9 +43,8 @@ public class HttpRequest {
                     .orElse(null)
                     .getValue();
 
-
             int contentLength = Integer.parseInt(stringContentLength);
-            bodyMessages = IOUtils.readData(bf, contentLength);
+            String bodyMessages = IOUtils.readData(bufferedReader, contentLength);
             this.paramMap = HttpRequestUtils.parseValues(bodyMessages, "&");
         }
     }

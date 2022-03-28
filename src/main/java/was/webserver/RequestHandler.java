@@ -39,25 +39,20 @@ public class RequestHandler extends Thread {
                 connection.getPort());
 
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
             DataOutputStream outputStream = new DataOutputStream(out);
-            HttpRequest httpRequest = new HttpRequest(bufferedReader);
+            HttpRequest request = new HttpRequest(in);
 
-            IOUtils.printRequestHeader(httpRequest);
+            IOUtils.printRequestHeader(request);
 
-            String path = httpRequest.getPath();
-            String method = httpRequest.getMethod();
-
-            HttpRequest request = new HttpRequest(path, method);
-
+            String path = request.getPath();
             if (handlerMapper.containsKey(request)) {
                 MyController myController = handlerMapper.get(request);
 
-                Map<String, String> paramMap = httpRequest.getParamMap();
+                Map<String, String> paramMap = request.getParamMap();
                 path = myController.process(paramMap);
             }
 
-            IOUtils.printRequestHeader(httpRequest);
+            IOUtils.printRequestHeader(request);
 
             HttpResponse httpResponse = new HttpResponse(path, outputStream);
             outputStream.writeBytes(httpResponse.getResponseHeader());

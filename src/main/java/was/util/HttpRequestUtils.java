@@ -1,6 +1,10 @@
 package was.util;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -52,8 +56,15 @@ public class HttpRequestUtils {
         return new Pair(tokens[0], tokens[1]);
     }
 
-    public static Pair parseHeader(String header) {
-        return getKeyValue(header, ": ");
+    public static List<Pair> parseHeader(BufferedReader bufferedReader) throws IOException {
+        List<Pair> pairs = new ArrayList<>();
+        String line = bufferedReader.readLine();
+        while (!(line == null || line.equals(""))) {
+            Pair pair = getKeyValue(line, ": ");
+            pairs.add(pair);
+            line = bufferedReader.readLine();
+        }
+        return pairs;
     }
 
     public static String parsePath(String firstLine) {
