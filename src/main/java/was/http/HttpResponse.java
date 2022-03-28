@@ -9,18 +9,22 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.util.Objects;
 
 public class HttpResponse {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private String responseHeader = "";
+    private String responseHeader;
     private byte[] responseBody;
     private DataOutputStream outputStream;
 
-    public HttpResponse(String path, OutputStream out) throws IOException {
+    public HttpResponse(String path, OutputStream out, int statusCode) throws IOException {
         outputStream = new DataOutputStream(out);
-        responseBody = createResponseBody(path);
-        response200Header(responseBody.length);
+        if (statusCode == 200) {
+           create200ResponseMessage(path);
+        } else if (statusCode == 302) {
+            create302ResponseMessage(path);
+        }
     }
 
     private byte[] createResponseBody(String path) throws IOException {
@@ -30,16 +34,28 @@ public class HttpResponse {
         return Files.readAllBytes(new File("./webapp/" + path).toPath());
     }
 
-    private void response200Header(int lengthOfBodyContent) {
-        responseHeader += ("HTTP/1.1 200 OK \r\n");
-        responseHeader += ("Content-Type: text/html;charset=utf-8\r\n");
-        responseHeader += ("Content-Length: " + lengthOfBodyContent + "\r\n");
-        responseHeader += ("\r\n");
+    private void create200ResponseMessage(String path) throws IOException {
+        responseBody = createResponseBody(path);
+        StringBuilder sb = new StringBuilder();
+        sb.append("HTTP/1.1 200 OK \r\n");
+        sb.append("Content-Type: text/html;charset=utf-8\r\n");
+        sb.append("Content-Length: " + responseBody.length + "\r\n");
+        sb.append("\r\n");
+        responseHeader = sb.toString();
     }
+
+    private void create302ResponseMessage(String path) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("HTTP/1.1 302 Found \r\n");
+        sb.append("Location: http://localhost:8080/").append(path).append(" \r\n");
+        responseHeader = sb.toString();
+    }
+
 
     public void writeResponseMessage() throws IOException {
         outputStream.writeBytes(responseHeader);
-        outputStream.write(responseBody);
+        if (!Objects.isNull(responseBody))
+            outputStream.write(responseBody);
         outputStream.flush();
     }
 }

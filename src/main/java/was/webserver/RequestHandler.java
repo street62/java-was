@@ -43,15 +43,16 @@ public class RequestHandler extends Thread {
 
             IOUtils.printRequestHeader(request);
 
+            int statusCode = 200;
             String path = request.getPath();
             if (handlerMapper.containsKey(request)) {
                 MyController myController = handlerMapper.get(request);
-
+                statusCode = 302;
                 Map<String, String> paramMap = request.getParamMap();
                 path = myController.process(paramMap);
             }
 
-            HttpResponse httpResponse = new HttpResponse(path, out);
+            HttpResponse httpResponse = new HttpResponse(path, out, statusCode);
             httpResponse.writeResponseMessage();
         } catch (IOException e) {
             log.error(e.getMessage());

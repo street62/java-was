@@ -22,7 +22,6 @@ public class SaveUserController implements MyController {
         DataBase.addUser(user);
 
         log.debug("users: {}", DataBase.findAll());
-//        DataBase.findAll().stream().forEach(System.out::println);
         return "index.html";
     }
 }
