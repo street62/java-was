@@ -51,8 +51,6 @@ public class RequestHandler extends Thread {
                 path = myController.process(paramMap);
             }
 
-            IOUtils.printRequestHeader(request);
-
             HttpResponse httpResponse = new HttpResponse(path, out);
             httpResponse.writeResponseMessage();
         } catch (IOException e) {
