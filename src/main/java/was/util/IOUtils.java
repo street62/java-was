@@ -29,14 +29,6 @@ public class IOUtils {
         return URLDecoder.decode(stringBody, "UTF-8");
     }
 
-    public static void printRequestHeader(HttpRequest request) throws IOException {
-        log.debug("Request method: {}, path: {}", request.getMethod(), request.getPath());
-
-        List<HttpRequestUtils.Pair> pairs = request.getPairs();
-        for (HttpRequestUtils.Pair pair : pairs) {
-            log.debug("header: {}", pair);
-        }
-    }
 
 
 }

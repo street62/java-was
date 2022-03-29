@@ -1,5 +1,6 @@
 package was.http;
 
+import org.slf4j.LoggerFactory;
 import was.util.HttpRequestUtils;
 
 import java.io.BufferedReader;
@@ -12,6 +13,7 @@ import was.util.IOUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import org.slf4j.Logger;
 
 public class HttpRequest {
 
@@ -20,10 +22,12 @@ public class HttpRequest {
     private String method;
     private ParamMap paramMap;
     private BufferedReader bufferedReader;
+    private Logger log = LoggerFactory.getLogger(getClass());
 
     public HttpRequest(String path, String method) {
         this.path = path;
         this.method = method;
+
     }
 
     public HttpRequest(InputStream in) throws IOException {
@@ -33,6 +37,12 @@ public class HttpRequest {
         this.method = HttpRequestUtils.parseMethod(firstLine);
         this.pairs = HttpRequestUtils.parseHeader(bufferedReader);
         readParameters();
+
+        log.debug("Request method: {}, path: {}", method, path);
+
+        for (HttpRequestUtils.Pair pair : pairs) {
+            log.debug("header: {}", pair);
+        }
     }
 
     private void readParameters() throws IOException {

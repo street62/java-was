@@ -37,8 +37,6 @@ public class RequestHandler extends Thread {
         try (InputStream in = connection.getInputStream(); OutputStream out = connection.getOutputStream()) {
             HttpRequest request = new HttpRequest(in);
 
-            IOUtils.printRequestHeader(request);
-
             MyController myController = handlerMapper.getHandler(request);
             HttpResponse httpResponse = myController.process(request);
 
