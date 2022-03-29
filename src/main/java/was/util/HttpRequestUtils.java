@@ -18,10 +18,14 @@ public class HttpRequestUtils {
      */
     public static Map<String, String> parseQueryString(String path) {
         String[] splitedPath = path.split(" ")[1].split("\\?");
-        if (splitedPath.length != 2) {
+        if (isNotExistQueryString(splitedPath.length)) {
             return null;
         }
         return parseValues(splitedPath[1], "&");
+    }
+
+    public static boolean isNotExistQueryString(int length) {
+        return length != 2;
     }
 
     /**
