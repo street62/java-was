@@ -59,12 +59,16 @@ public class HttpRequestUtils {
     public static List<Pair> parseHeader(BufferedReader bufferedReader) throws IOException {
         List<Pair> pairs = new ArrayList<>();
         String line = bufferedReader.readLine();
-        while (!(line == null || line.equals(""))) {
+        while (isNotLineEmpty(line)) {
             Pair pair = getKeyValue(line, ": ");
             pairs.add(pair);
             line = bufferedReader.readLine();
         }
         return pairs;
+    }
+
+    public static boolean isNotLineEmpty (String line) {
+        return !(line == null || line.equals(""));
     }
 
     public static String parsePath(String firstLine) {
