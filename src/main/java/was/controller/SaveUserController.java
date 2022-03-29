@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import was.db.DataBase;
 import was.http.HttpRequest;
 import was.http.HttpResponse;
+import was.http.ParamMap;
 import was.model.User;
 
 public class SaveUserController implements MyController {
@@ -16,7 +17,7 @@ public class SaveUserController implements MyController {
 
     @Override
     public HttpResponse process(HttpRequest request) throws IOException {
-        Map<String, String> paramMap = request.getParamMap();
+        ParamMap paramMap = request.getParamMap();
 
         String userId = paramMap.get("userId");
         String password = paramMap.get("password");

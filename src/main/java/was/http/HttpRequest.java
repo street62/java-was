@@ -18,7 +18,7 @@ public class HttpRequest {
     private List<HttpRequestUtils.Pair> pairs;
     private String path;
     private String method;
-    private Map<String, String> paramMap;
+    private ParamMap paramMap;
     private BufferedReader bufferedReader;
 
     public HttpRequest(String path, String method) {
@@ -45,7 +45,7 @@ public class HttpRequest {
 
             int contentLength = Integer.parseInt(stringContentLength);
             String bodyMessages = IOUtils.readData(bufferedReader, contentLength);
-            this.paramMap = HttpRequestUtils.parseValues(bodyMessages, "&");
+            this.paramMap = new ParamMap(bodyMessages);
         }
     }
 
@@ -57,7 +57,7 @@ public class HttpRequest {
         return path;
     }
 
-    public Map<String, String> getParamMap() {
+    public ParamMap getParamMap() {
         return paramMap;
     }
 
