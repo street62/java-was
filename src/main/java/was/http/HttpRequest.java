@@ -43,6 +43,7 @@ public class HttpRequest {
         for (HttpRequestUtils.Pair pair : pairs) {
             log.debug("header: {}", pair);
         }
+        bufferedReader.close();
     }
 
     private void readParameters() throws IOException {
