@@ -34,11 +34,6 @@ public class HttpResponse {
         }
     }
 
-    public void setCookie(String key, String value) {
-        cookie = new HttpRequestUtils.Pair(key, value);
-        log.debug("cookie: {}", cookie);
-    }
-
     private byte[] createResponseBody(String path) throws IOException {
         if (path.equals("/")) {
             return "Hello World".getBytes(StandardCharsets.UTF_8);
@@ -52,9 +47,7 @@ public class HttpResponse {
         sb.append("HTTP/1.1 200 OK \r\n");
         sb.append("Content-Type: text/html;charset=utf-8\r\n");
         sb.append("Content-Length: " + responseBody.length + "\r\n");
-        log.debug("쿠키: {}", cookie);
         if (!Objects.isNull(cookie)) {
-            log.debug("쿠키 있음!");
             sb.append("Set-Cookie: ").append(cookie.getKey()).append("=").append(cookie.getValue()).append("; Path=/\r\n");
         }
         sb.append("\r\n");
@@ -79,6 +72,5 @@ public class HttpResponse {
         outputStream.close();
 
         log.debug("responseHeader: {}", responseHeader);
-        log.debug("cookie: {}", cookie);
     }
 }

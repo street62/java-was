@@ -3,6 +3,7 @@ package was.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import was.db.DataBase;
+import was.db.Session;
 import was.http.HttpRequest;
 import was.http.HttpResponse;
 import was.http.ParamMap;
@@ -16,8 +17,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 public class LoginController implements MyController{
-    List<String> sessionIdList = new ArrayList<>();
-    Logger log = LoggerFactory.getLogger(getClass());
+    private final Logger log = LoggerFactory.getLogger(getClass());
 
     @Override
     public HttpResponse process(HttpRequest request) throws IOException {
@@ -32,10 +32,9 @@ public class LoginController implements MyController{
         }
         log.debug("로그인 성공!");
 
-        String sessionId = UUID.randomUUID().toString();
+        String sessionId = Session.createSession();
         HttpRequestUtils.Pair cookie = new HttpRequestUtils.Pair("sessionId", sessionId);
         HttpResponse response = new HttpResponse("index.html", 200, cookie);
-        sessionIdList.add(sessionId);
 
         return response;
     }

@@ -11,7 +11,7 @@ import was.http.HttpResponse;
 import was.http.ParamMap;
 import was.model.User;
 
-public class SaveUserController implements MyController {
+public class UserSaveController implements MyController {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
 
