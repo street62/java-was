@@ -30,7 +30,7 @@ public class HttpResponse {
     }
 
     public void setCookie(String key, String value) {
-        cookie =  new HttpRequestUtils.Pair(key, value);
+        cookie = new HttpRequestUtils.Pair(key, value);
     }
 
     private byte[] createResponseBody(String path) throws IOException {
@@ -68,5 +68,9 @@ public class HttpResponse {
         if (!Objects.isNull(responseBody))
             outputStream.write(responseBody);
         outputStream.flush();
+        outputStream.close();
+
+        log.debug("responseHeader: {}", responseHeader);
+        log.debug("cookie: {}", cookie);
     }
 }

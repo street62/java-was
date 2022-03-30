@@ -1,5 +1,6 @@
 package was.webserver;
 
+import was.controller.LoginController;
 import was.controller.MyController;
 import was.controller.SaveUserController;
 import was.controller.WebappController;
@@ -13,6 +14,7 @@ public class HandlerMapper {
 
     public HandlerMapper() {
         handlerMapper.put(new HttpRequest("/user/create", "POST"), new SaveUserController());
+        handlerMapper.put(new HttpRequest("/user/login", "POST"), new LoginController());
     }
 
     public MyController getHandler(HttpRequest request) {

@@ -37,9 +37,9 @@ public class RequestHandler extends Thread {
             HttpRequest request = new HttpRequest(in);
 
             MyController myController = handlerMapper.getHandler(request);
-            HttpResponse httpResponse = myController.process(request);
+            HttpResponse response = myController.process(request);
 
-            httpResponse.writeResponseMessage(out);
+            response.writeResponseMessage(out);
         } catch (IOException e) {
             log.error(e.getMessage());
         }

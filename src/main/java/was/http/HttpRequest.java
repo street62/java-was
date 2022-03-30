@@ -39,11 +39,9 @@ public class HttpRequest {
         readParameters();
 
         log.debug("Request method: {}, path: {}", method, path);
-
         for (HttpRequestUtils.Pair pair : pairs) {
             log.debug("header: {}", pair);
         }
-        bufferedReader.close();
     }
 
     private void readParameters() throws IOException {
