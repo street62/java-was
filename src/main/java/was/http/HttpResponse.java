@@ -22,8 +22,13 @@ public class HttpResponse {
 
 
     public HttpResponse(String path, int statusCode) throws IOException {
+        this(path, statusCode, null);
+    }
+
+    public HttpResponse(String path, int statusCode, HttpRequestUtils.Pair cookie) throws IOException {
+        this.cookie = cookie;
         if (statusCode == 200) {
-           create200ResponseMessage(path);
+            create200ResponseMessage(path);
         } else if (statusCode == 302) {
             create302ResponseMessage(path);
         }
@@ -31,6 +36,7 @@ public class HttpResponse {
 
     public void setCookie(String key, String value) {
         cookie = new HttpRequestUtils.Pair(key, value);
+        log.debug("cookie: {}", cookie);
     }
 
     private byte[] createResponseBody(String path) throws IOException {
@@ -46,8 +52,10 @@ public class HttpResponse {
         sb.append("HTTP/1.1 200 OK \r\n");
         sb.append("Content-Type: text/html;charset=utf-8\r\n");
         sb.append("Content-Length: " + responseBody.length + "\r\n");
+        log.debug("쿠키: {}", cookie);
         if (!Objects.isNull(cookie)) {
-            sb.append("Set-cookie: ").append(cookie.getKey()).append("=").append(cookie.getValue()).append("; Path=/\r\n");
+            log.debug("쿠키 있음!");
+            sb.append("Set-Cookie: ").append(cookie.getKey()).append("=").append(cookie.getValue()).append("; Path=/\r\n");
         }
         sb.append("\r\n");
         responseHeader = sb.toString();

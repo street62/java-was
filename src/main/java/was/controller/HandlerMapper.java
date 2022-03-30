@@ -1,4 +1,4 @@
-package was.webserver;
+package was.controller;
 
 import was.controller.LoginController;
 import was.controller.MyController;
