@@ -23,7 +23,6 @@ public class RequestHandler extends Thread {
     private static final Logger log = LoggerFactory.getLogger(RequestHandler.class);
 
     private HandlerMapper handlerMapper = new HandlerMapper();
-
     private Socket connection;
 
     public RequestHandler(Socket connectionSocket) {

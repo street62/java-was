@@ -2,6 +2,7 @@ package was.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import was.util.HttpRequestUtils;
 
 import java.io.DataOutputStream;
 import java.io.File;
@@ -16,6 +17,9 @@ public class HttpResponse {
     private final Logger log = LoggerFactory.getLogger(getClass());
     private String responseHeader;
     private byte[] responseBody;
+    private HttpRequestUtils.Pair cookie;
+
+
 
     public HttpResponse(String path, int statusCode) throws IOException {
         if (statusCode == 200) {
@@ -23,6 +27,10 @@ public class HttpResponse {
         } else if (statusCode == 302) {
             create302ResponseMessage(path);
         }
+    }
+
+    public void setCookie(String key, String value) {
+        cookie =  new HttpRequestUtils.Pair(key, value);
     }
 
     private byte[] createResponseBody(String path) throws IOException {
@@ -38,6 +46,9 @@ public class HttpResponse {
         sb.append("HTTP/1.1 200 OK \r\n");
         sb.append("Content-Type: text/html;charset=utf-8\r\n");
         sb.append("Content-Length: " + responseBody.length + "\r\n");
+        if (!Objects.isNull(cookie)) {
+            sb.append("Set-cookie: ").append(cookie.getKey()).append("=").append(cookie.getValue()).append("; Path=/\r\n");
+        }
         sb.append("\r\n");
         responseHeader = sb.toString();
     }

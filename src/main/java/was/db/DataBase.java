@@ -14,11 +14,22 @@ public class DataBase {
         users.put(user.getUserId(), user);
     }
 
-    public static User findUserById(String userId) {
+    public static User findByUserId(String userId) {
         return users.get(userId);
     }
 
     public static Collection<User> findAll() {
         return users.values();
+    }
+
+    public static User findByUserIdAndPassword(String userId, String password) {
+        User user = findByUserId(userId);
+        if (user == null) {
+            return null;
+        }
+        if (user.isCorrectPassword(password)) {
+            return user;
+        }
+        return null;
     }
 }
