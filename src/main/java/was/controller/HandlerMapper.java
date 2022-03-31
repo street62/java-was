@@ -12,6 +12,7 @@ public class HandlerMapper {
         handlerMapper.put(new HttpRequest("/user/create", "POST"), new UserSaveController());
         handlerMapper.put(new HttpRequest("/user/login", "POST"), new LoginController());
         handlerMapper.put(new HttpRequest("/user/list", "GET"), new UserListController());
+        handlerMapper.put(new HttpRequest("/", "GET"), new ArticleListController());
     }
 
     public MyController getHandler(HttpRequest request) {

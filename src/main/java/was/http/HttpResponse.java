@@ -29,10 +29,6 @@ public class HttpResponse {
     public HttpResponse(String path, int statusCode, HttpRequestUtils.Pair cookie) throws IOException {
         this.cookie = cookie;
         String[] splitedPath = path.split("\\.");
-        System.out.println("sizeof(splitedPath): " + splitedPath.length);
-        for (String s : splitedPath) {
-            System.out.println("splitedPath: " + s + "length: " + s.length());
-        }
         this.contentsType = ContentsType.from(splitedPath[splitedPath.length - 1]);
         if (statusCode == 200) {
             create200ResponseMessage(path);

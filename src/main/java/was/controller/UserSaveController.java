@@ -1,7 +1,6 @@
 package was.controller;
 
 import java.io.IOException;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,7 +26,7 @@ public class UserSaveController implements MyController {
 
         DataBase.addUser(user);
 
-        log.debug("users: {}", DataBase.findAll());
+        log.debug("users: {}", DataBase.findUsers());
         return new HttpResponse("index.html", 302);
     }
 

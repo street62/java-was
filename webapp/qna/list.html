@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html th:replace="layout/header :: header(~{::title}, ~{::content})"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>사용자 목록</title>
+</head>
+<body>
+<content>
+        <tr th:each="user : ${users}">
+            <th scope="row" th:text="${userStat.count}"></th>
+            <td th:text="${user.userId}"></td>
+            <td>
+                <a th:href="@{/users/{userId}(userId=${user.userId})}" th:text="${user.name}"/>
+            </td>
+            <td th:text="${user.email}"></td>
+            <td><a th:href="@{/users/{userId}/form(userId=${user.userId})}" href="#" class="btn btn-success" role="button">수정</a></td>
+        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</content>
+</body>
+</html>

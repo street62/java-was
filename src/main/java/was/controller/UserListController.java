@@ -1,11 +1,8 @@
 package was.controller;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,9 +27,6 @@ public class UserListController implements MyController {
                 .map(strings -> new HttpRequestUtils.Pair(strings[0], strings[1]))
                 .collect(Collectors.toList());
 
-        System.out.println("pairs");
-        pairs.stream().forEach(System.out::println);
-        System.out.println(isNotLoginUser(pairs));
         if (isNotLoginUser(pairs)) {
             return new HttpResponse("user/login.html", 200);
         }
@@ -46,18 +40,28 @@ public class UserListController implements MyController {
                 .allMatch(pair -> !("sessionId".equals(pair.getKey()) && Session.containsSessionId(pair.getValue())));
     }
 
-    private void writeListHtml() throws FileNotFoundException {
+    private void writeListHtml() throws IOException {
         PrintWriter writer = new PrintWriter("./webapp/user/list.html");
         StringBuilder sb = new StringBuilder();
-        sb.append("<table border=\"1\" width=\"500\">");
-        sb.append("    <tr>");
-        sb.append("        <th>userId</th>");
-        sb.append("        <th>password</th>");
-        sb.append("        <th>name</th>");
-        sb.append("        <th>email</th>");
-        sb.append("    </tr>");
 
-        List<User> users = new ArrayList<>(DataBase.findAll());
+        BufferedReader headerReader = new BufferedReader(new FileReader("./webapp/layout/header.html"));
+        String str;
+        while ((str = headerReader.readLine()) != null) {
+            sb.append(str);
+        }
+        headerReader.close();
+
+        sb.append("<div class=\"col-md-10 col-md-offset-1\">");
+        sb.append("    <div class=\"panel panel-default\">");
+        sb.append("<table class=\"table table-hover\">");
+        sb.append("    <thead>");
+        sb.append("    <tr>");
+        sb.append("        <th>#</th> <th>사용자 아이디</th> <th>이름</th> <th>이메일</th><th></th>");
+        sb.append("    </tr>");
+        sb.append("    </thead>");
+        sb.append("    <tbody>");
+
+        List<User> users = new ArrayList<>(DataBase.findUsers());
         for (User user : users) {
             sb.append("    <tr>");
             sb.append("        <td>").append(user.getUserId()).append("</td>");
@@ -66,7 +70,17 @@ public class UserListController implements MyController {
             sb.append("        <td>").append(user.getEmail()).append("</td>");
             sb.append("    </tr>");
         }
-        sb.append("</table>");
+        sb.append("             </tbody>");
+        sb.append("            </table>");
+        sb.append("        </div>");
+        sb.append("    </div>");
+        sb.append("</div>");
+
+        BufferedReader footerReader = new BufferedReader(new FileReader("./webapp/layout/footer.html"));
+        while ((str = footerReader.readLine()) != null) {
+            sb.append(str);
+        }
+        footerReader.close();
 
         writer.write(sb.toString());
         writer.close();
