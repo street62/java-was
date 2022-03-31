@@ -4,10 +4,8 @@ import was.db.DataBase;
 import was.http.HttpRequest;
 import was.http.HttpResponse;
 import was.model.Article;
-import was.model.User;
 
 import java.io.*;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ArticleListController implements MyController {
@@ -44,7 +42,7 @@ public class ArticleListController implements MyController {
             sb.append("          <div class=\"auth-info\">");
             sb.append("              <i class=\"icon-add-comment\"></i>");
             sb.append("              <span class=\"time\">").append(article.getCreateDate()).append("</span>");
-            sb.append("              <a href=\"/user/profile.html\" class=\"author\">").append(article.getUserName()).append("</a>");
+            sb.append("              <a href=\"/user/profile.html\" class=\"author\">").append(article.getWriter()).append("</a>");
             sb.append("          </div>");
             sb.append("          <div class=\"reply\" title=\"댓글\">");
             sb.append("              <i class=\"icon-reply\"></i>");

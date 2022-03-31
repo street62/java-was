@@ -3,13 +3,12 @@ package was.model;
 import java.time.LocalDate;
 
 public class Article {
-    private LocalDate createDate;
-    private String userName;
+    private LocalDate createDate = LocalDate.now();
+    private String writer;
     private String content;
 
-    public Article(LocalDate createDate, String userName, String content) {
-        this.createDate = createDate;
-        this.userName = userName;
+    public Article(String writer, String content) {
+        this.writer = writer;
         this.content = content;
     }
 
@@ -17,8 +16,8 @@ public class Article {
         return createDate;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getWriter() {
+        return writer;
     }
 
     public String getContent() {

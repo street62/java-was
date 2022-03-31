@@ -20,8 +20,8 @@ public class DataBase {
         users.put("userId2", new User("userId2", "password2", "name2", "email2@gmail.com"));
         users.put("userId3", new User("userId3", "password3", "name3", "email3@gmail.com"));
 
-        articles.add(new Article(LocalDate.now(), "userName1", "content1"));
-        articles.add(new Article(LocalDate.now(), "userName2", "content2"));
+        articles.add(new Article("userName1", "content1"));
+        articles.add(new Article("userName2", "content2"));
     }
 
     public static void addUser(User user) {
@@ -49,5 +49,9 @@ public class DataBase {
 
     public static List<Article> findArticles() {
         return articles;
+    }
+
+    public static void addArticle(Article article) {
+        articles.add(article);
     }
 }
