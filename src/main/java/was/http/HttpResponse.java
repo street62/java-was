@@ -18,6 +18,7 @@ public class HttpResponse {
     private String responseHeader;
     private byte[] responseBody;
     private HttpRequestUtils.Pair cookie;
+    private ContentsType contentsType;
 
 
 
@@ -27,6 +28,12 @@ public class HttpResponse {
 
     public HttpResponse(String path, int statusCode, HttpRequestUtils.Pair cookie) throws IOException {
         this.cookie = cookie;
+        String[] splitedPath = path.split("\\.");
+        System.out.println("sizeof(splitedPath): " + splitedPath.length);
+        for (String s : splitedPath) {
+            System.out.println("splitedPath: " + s + "length: " + s.length());
+        }
+        this.contentsType = ContentsType.from(splitedPath[splitedPath.length - 1]);
         if (statusCode == 200) {
             create200ResponseMessage(path);
         } else if (statusCode == 302) {
@@ -45,7 +52,7 @@ public class HttpResponse {
         responseBody = createResponseBody(path);
         StringBuilder sb = new StringBuilder();
         sb.append("HTTP/1.1 200 OK \r\n");
-        sb.append("Content-Type: text/html;charset=utf-8\r\n");
+        sb.append("Content-Type: ").append(contentsType.getMime()).append(";charset=utf-8\r\n");
         sb.append("Content-Length: " + responseBody.length + "\r\n");
         if (!Objects.isNull(cookie)) {
             sb.append("Set-Cookie: ").append(cookie.getKey()).append("=").append(cookie.getValue()).append("; Path=/\r\n");
